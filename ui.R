@@ -144,14 +144,16 @@ dashboardPage(
                     ),
                     fluidRow(
                         column(6,
+                               actionButton("reset_plate",
+                                            h4("Reset Plate")),
                                h3("plate status"),
                                DTOutput("updatedPlate")
                                ),
-                        column(3,
+                        column(2,
                                actionButton("update_metadata",
                                             h4("Update Wells"))
                                ),
-                        column(3,
+                        column(2,
                                actionButton("export",
                                             h4("Export Template"))
                                )

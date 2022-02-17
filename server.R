@@ -106,6 +106,30 @@ server <- function(input, output, session){
                                                )
 
 
+    observeEvent(input$reset_plate, {
+        plate$dt <- data.table(experiment_name = "",
+                               user = "",
+                               WellName = allWells,
+                               sample_name = "none",
+                               sample_type = "none",
+                               DNA_source = "none",
+                               input_ng = 0,
+                               provider = "none",
+                               process = "none",
+                               preamp = "none",
+                               fetal_fraction = 0,
+                               spikein_sample = "none",
+                               spikein_ratio = 0,
+                               primer_set = "none",
+                               assay_type = "none",
+                               FAM_target = "none",
+                               HEX_target = "none",
+                               Cy5_target = "none",
+                               Cy5.5_target = "none",
+                               notes = "")[order(WellName)]
+        plate$select <- mat
+
+    })
 
     observeEvent(input$update_metadata, {
         selectedWells <- getSelected()
