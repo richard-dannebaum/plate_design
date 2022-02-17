@@ -1,6 +1,5 @@
 library(shiny)
 library(shinydashboard)
-library(reactable)
 library(DT)
 
 source("metadata_fields.R")
@@ -19,6 +18,13 @@ dashboardPage(
     dashboardBody(
         tabItems(
             tabItem(tabName = "select",
+                    fluidRow(
+                        column(3,
+                               actionButton("reset_plate",
+                                            h4("Reset Plate"),
+                                            style="background-color:#ff5a84")
+                               ),                               
+                        ),
                     fluidRow(
                         column(3,
                                textInput("experiment_name",
@@ -124,6 +130,13 @@ dashboardPage(
 
                                ),
                         column(2,
+                               selectInput("primerSet",
+                                           h4("Primer Set"),
+                                           choices = c("Aneuploidy_36plex",
+                                                       "FetalFraction_iteration3",
+                                                       "MNase_P1_V1",
+                                                       "preamp_P1_V1"),
+                                           selected=NULL),
                                selectInput("FAM_target",
                                            h4("FAM target"),
                                            choices = accepted_targets,
@@ -144,18 +157,23 @@ dashboardPage(
                     ),
                     fluidRow(
                         column(6,
-                               actionButton("reset_plate",
-                                            h4("Reset Plate")),
                                h3("plate status"),
+                               br(),
+                               downloadButton("download", "Download CSV",
+                                              style="background-color:#c5d165"),
+                               br(),
+                               br(),
                                DTOutput("updatedPlate")
                                ),
                         column(2,
                                actionButton("update_metadata",
-                                            h4("Update Wells"))
+                                            h4("Update Wells"),
+                                            style="background-color:#4a8cff")
                                ),
                         column(2,
                                actionButton("export",
-                                            h4("Export Template"))
+                                            h4("Export Template"),
+                                            style="background-color:#c5d165")
                                )
 
                     )

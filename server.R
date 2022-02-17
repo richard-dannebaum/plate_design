@@ -3,12 +3,12 @@ library(DT)
 library(data.table)
 
 rows <- c("A", "B", "C", "D", "E", "F", "G", "H")
+cols <- 1:12
 cols <- ifelse(nchar(cols) == 1, paste0("0", cols), as.character(cols))
 allWells <- apply(expand.grid(rows, cols), 1, function(x) paste(x, collapse=""))
 
 mat <- matrix(nrow=8, ncol=12, 0)
-rownames(mat) <- c("A", "B", "C", "D", "E", "F", "G", "H")
-cols <- ifelse(nchar(cols) == 1, paste0("0", cols), as.character(cols))
+rownames(mat) <- rows
 colnames(mat) <- cols
 
 
@@ -155,14 +155,24 @@ server <- function(input, output, session){
                                Cy5.5_target = input$Cy5.5_target,
                                notes = input$sample_notes)
         updated <- rbind(plate$dt[!WellName %in% selectedWells], update)
+        updated[,experiment_name:= input$experiment_name]
+        updated[,user:= input$user]
         plate$dt <- updated[order(WellName)]
         byRow <- substring(selectedWells, 1, 1)
         byCol <- substring(selectedWells, 2, 3)
         plate$select[match(byRow, rownames(plate$select)), match(byCol, colnames(plate$select))] <- input$sample_type
 
     })
-
-
-
+    
+    
+    output$download <- downloadHandler(        
+        filename = function() {
+            paste(input$experiment_name, ".csv", sep = "")
+        },
+        content = function(file) {
+            write.csv(plate$dt, file, row.names = FALSE, quote=FALSE)
+        }
+    )
+    
 
 }
